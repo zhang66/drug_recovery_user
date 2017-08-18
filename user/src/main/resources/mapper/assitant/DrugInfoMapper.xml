@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.blueocean.app.assistantmanage.dao.DrugInfoDao" >
+ 
+  <!-- 基本药品信息 -->
+   <resultMap id="ResultMap" type="com.blueocean.app.assistantmanage.dto.DrugInfoDto" >
+    <id column="goods_upc" property="drugId" jdbcType="VARCHAR" />
+    <result column="goods_name" property="drugName" jdbcType="VARCHAR" />
+    <result column="drug_pic" property="drugPic" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  
+  <!-- 根据upc查询基本药品信息 -->
+  <select id="getDrugInfoByUpc" resultType="com.blueocean.app.assistantmanage.dto.DrugInfoDto" parameterType="java.lang.String" >
+   
+    select 
+    goods_upc drugId,goods_name drugName,drug_pic drugPic
+    from druginfo
+    where goods_upc = #{upc}
+  </select>
+ 
+ 
+</mapper>

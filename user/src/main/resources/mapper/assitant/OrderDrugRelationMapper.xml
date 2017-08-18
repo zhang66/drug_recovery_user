@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blueocean.app.assistantmanage.dao.OrderDrugRelationDao">
+  <resultMap id="BaseResultMap" type="com.blueocean.app.assistantmanage.entity.OrderDrugRelationDo">
+     
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="drug_id" jdbcType="VARCHAR" property="drugId" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="drug_count"  property="drugCount" />
+  </resultMap>
+
+  <insert id="insertBatchRelation" parameterType="com.blueocean.app.assistantmanage.entity.OrderDrugRelationDo">
+    
+     insert into order_drug_relation 
+
+	<trim prefix="(" suffix=")" suffixOverrides=",">
+	        id, order_id, drug_id,drug_count,gmt_create
+    </trim>   
+   	values 
+     	<foreach collection="list" item="item" index="index" separator="," >  
+		    (  
+		        #{item.id,jdbcType=VARCHAR},
+		        #{item.orderId,jdbcType=VARCHAR},
+		        #{item.drugId,jdbcType=VARCHAR},
+		        #{item.drugCount},
+		        now()
+		      )
+       </foreach> 
+  </insert>
+  
+  
+   <select id="getDrugInfosByOrderId" resultType="com.blueocean.app.assistantmanage.dto.DrugInfoDto" parameterType="string" >
+   
+      SELECT relation.`drug_count` drugCount,relation.`drug_id` drugId,
+		`druginfo`.`goods_name` drugName,`druginfo`.`drug_pic` drugPic
+		FROM `order_drug_relation` relation LEFT JOIN `druginfo`
+		ON relation.`drug_id` = druginfo.`goods_upc`
+		WHERE is_active = 1 and relation.order_id = #{orderId}
+  </select> 
+ 
+ 
+</mapper>
